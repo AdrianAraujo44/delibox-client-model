@@ -1,44 +1,40 @@
-import { IoAddSharp } from 'react-icons/io5'
+import { useNavigate } from 'react-router-dom'
+import productDefault from './../../assets/productDefault.png'
+
 import {
   Container,
   Item,
   Box,
-  TextGroup
 } from './styles'
 
 interface ICategory {
   title: string,
   products: Array<{
+    _id: string,
     name: string,
     description: string,
     price: number,
-    image: string
+    imageUrl: string
   }>
 }
 
-function CategorySection ({title, products}: ICategory) {
+function CategorySection({ title, products }: ICategory) {
+  const navigate = useNavigate()
   return (
     <Container>
       <h1>{title}</h1>
-      {
-        products.map((item) => (
-          <Item>
-            <Box>
-              <img src={item.image} />
-              <TextGroup>
-                <span>{item.name}</span>
-                <span>{item.description}</span>
-                <strong>R$ {item.price}</strong>
-              </TextGroup>
-            </Box>
-            <Box>
-              <button>
-                <IoAddSharp size={35} color="#fff"/>
-              </button>
-            </Box>
-          </Item>
-        ))
-      }
+      <Box>
+        {
+          products.map((item, index) => (
+            <Item key={index} onClick={() => navigate(`product/${item._id}`)}>
+              <img src={item.imageUrl != "" ? item.imageUrl : productDefault} />
+              <strong>{item.name}</strong>
+              <span>R$ {item.price}</span>
+            </Item>
+          ))
+        }
+      </Box>
+
     </Container>
   )
 }

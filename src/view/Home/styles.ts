@@ -9,8 +9,7 @@ export const Container = styled.div`
 `
 export const Wrapper = styled.img`
   width: 100%;
-  /* max-width: 1200px; */
-  height: 300px;
+  height: 200px;
   object-fit: cover;
 `
 
