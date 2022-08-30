@@ -8,6 +8,8 @@ import productDefault from './../../assets/productDefault.png'
 import { getOrderStatus } from './utils/functions'
 import { format } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
+import { useSocket } from '../../contexts/socket/useSocket'
+
 import {
   Container,
   Progress,
@@ -23,16 +25,24 @@ function Order() {
   const [order, setOrder] = useState<any>()
   const [orderStatus, setOrderStatus] = useState<any>([])
   const { colors } = useTheme()
+  const socket = useSocket()
 
   useEffect(() => {
     getOrder.requestGet(`order/${code}`)
+    socket.emit('join_order_room',code )
   }, [code])
+
+  useEffect(() => {
+    socket.on('track_order', (data) => {
+      setOrder(data)
+      setOrderStatus([...data.status])
+    })
+  },[socket])
 
   useEffect(() => {
     if (getOrder.loaded && !getOrder.error) {
       setOrder(getOrder.data)
       setOrderStatus([...getOrder.data.status])
-      console.log(getOrder.data)
     } else if (getOrder.loaded && getOrder.error) {
       toast.error(getOrder.error)
     }
