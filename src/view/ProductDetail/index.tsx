@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { IoArrowBack, IoCart } from 'react-icons/io5'
 import { useNavigate, useParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
 import Counter from '../../components/Counter'
+import Loading from '../../components/Loading'
 import { useCart } from '../../hooks/useCart'
 import useRequestGet from '../../hooks/useRequestGet'
 import productDefault from './../../assets/productDefault.png'
@@ -37,7 +37,7 @@ function ProductDetail() {
     let exits = false
     let position = 0
 
-    for (let i = 0; i< cart.length; i++) {
+    for (let i = 0; i < cart.length; i++) {
       if (cart[i]._id == data?._id) {
         exits = true
         position = i
@@ -47,11 +47,11 @@ function ProductDetail() {
       }
     }
 
-    if(exits) {
+    if (exits) {
       let aux = cart
       aux[position].amount += amount
       setCart([...aux])
-    }else {
+    } else {
       setCart([...cart, {
         _id: data?._id,
         name: data?.name,
@@ -61,35 +61,48 @@ function ProductDetail() {
       }])
     }
 
-
-    // toast.success("item adicionado ao carrinho!")
     navigate('/')
   }
 
   return (
-    <Container>
-      <header>
-        <button type="button">
-          <IoArrowBack size={20} onClick={() => navigate('/')} />
-        </button>
-        <span>voltar</span>
-      </header>
-      <Content>
-        <img
-          src={data.imageUrl != "" ? data.imageUrl : productDefault}
-          alt="image do produto" />
-        <strong>{data?.name}</strong>
-        <p>{data?.description}</p>
-        <section>
-          <Counter setAmount={setAmount} />
-          <strong>R$ {data?.price}</strong>
-        </section>
-        <Button onClick={() => addCart()}>
-          <IoCart size={25} color={'#fff'} />
-          adicionar ao carrinho
-        </Button>
-      </Content>
-    </Container>
+    <>
+      {!productGet.loading ? (
+        <Container>
+          <header>
+            <button type="button">
+              <IoArrowBack size={20} onClick={() => navigate('/')} />
+            </button>
+            <span>voltar</span>
+          </header>
+          <Content>
+            <img
+              src={data.imageUrl != "" ? data.imageUrl : productDefault}
+              alt="image do produto" />
+            <strong>{data?.name}</strong>
+            <p>{data?.description}</p>
+            <section>
+              {data?.available == true ? (
+                <Counter setAmount={setAmount} />
+              ) : (
+                <span className='missing'>produto indisponivel</span>
+              )}
+              <strong>R$ {data?.price}</strong>
+            </section>
+            {
+              data?.available == true && (
+                <Button onClick={() => addCart()}>
+                  <IoCart size={25} color={'#fff'} />
+                  adicionar ao carrinho
+                </Button>
+              )
+            }
+          </Content>
+        </Container>
+      ) : (
+        <Loading />
+      )}
+    </>
+
   )
 }
 

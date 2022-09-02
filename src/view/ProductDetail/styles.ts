@@ -44,6 +44,11 @@ export const Content = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
+
+    .missing {
+      color: ${props => props.theme.colors.palette.rose[500]};
+      font-weight: bold;
+    }
   }
 `
 
