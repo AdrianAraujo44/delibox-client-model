@@ -54,7 +54,7 @@ export const PriceBox = styled.div`
     }
   }
 
-  button {
+  .button {
     width: 100%;
     height: 50px;
     background-color: ${props => props.theme.colors.main};
@@ -70,6 +70,7 @@ export const PriceBox = styled.div`
 
 export const Form = styled(Unform)`
   display: flex;
+  flex-direction: column;
   gap: 5px;
   margin-top: 40px;
   margin-bottom: 40px;
@@ -90,4 +91,10 @@ export const Form = styled(Unform)`
     color: ${props => props.theme.colors.palette.zinc[400]};
     font-weight: 400;
   }
+`
+
+export const SearchCep = styled.div `
+  display: flex;
+  gap: 5px;
+  margin-top: 30px;
 `
