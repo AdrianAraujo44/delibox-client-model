@@ -57,11 +57,12 @@ function NewOrder() {
 
     socket.emit("new_orders", {
       deliveryId: import.meta.env.VITE_DELIVERY_ID,
+      type: cep ? "entrega" : "retirada",
       date: new Date(),
       notes: data.notes,
       money: {
         type: "dinheiro",
-        change: 0
+        change: data?.money?.change | 0
       },
       client: {
         name: data.name,
