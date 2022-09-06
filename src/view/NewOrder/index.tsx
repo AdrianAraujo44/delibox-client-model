@@ -2,7 +2,7 @@ import { FormHandles } from '@unform/core'
 import axios from 'axios'
 import { useEffect } from 'react'
 import { useRef, useState } from 'react'
-import { IoArrowBack, IoCode } from 'react-icons/io5'
+import { IoArrowBack } from 'react-icons/io5'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import InputForm from '../../components/Forms/InputForm'
@@ -10,13 +10,16 @@ import SelectForm from '../../components/Forms/SelectForm'
 import TextAreaForm from '../../components/Forms/TextAreaForm'
 import { useSocket } from '../../contexts/socket/useSocket'
 import { useCart } from '../../hooks/useCart'
-import dollar from '../../assets/dollar.png'
+import { useValidateForm } from '../../hooks/useValidadeForm'
+import { schemaNewOrder } from '../../constant/schemasForm'
+
 import {
   Container,
   Form,
   Row,
   Payment
 } from './styles'
+
 
 function NewOrder() {
   const formRef = useRef<FormHandles>(null)
@@ -47,37 +50,39 @@ function NewOrder() {
       toast.error('cep não encontrado!')
     }
   }
+  const {handleSubmit} = useValidateForm({
+    formRef, schema: schemaNewOrder,
+    onSuccess: (data:any) => {
+      let productsAux: { amount: number, item: string }[] = []
 
-  const handlerSubmit = (data: any) => {
-    let productsAux: { amount: number, item: string }[] = []
-
-    cart.forEach((item) => {
-      productsAux.push({ amount: item.amount, item: item._id })
-    })
-
-    socket.emit("new_orders", {
-      deliveryId: import.meta.env.VITE_DELIVERY_ID,
-      type: cep ? "entrega" : "retirada",
-      date: new Date(),
-      notes: data.notes,
-      money: {
-        type: "dinheiro",
-        change: data?.money?.change | 0
-      },
-      client: {
-        name: data.name,
-        phone: data.phone,
-        address: {
-          street: address?.street,
-          number: data?.address?.number,
-          complement: data?.address?.complement,
-          cep: cep,
-          neighborhood: address?.neighborhood
-        }
-      },
-      products: productsAux
-    }, socket.id)
-  }
+      cart.forEach((item) => {
+        productsAux.push({ amount: item.amount, item: item._id })
+      })
+  
+      socket.emit("new_orders", {
+        deliveryId: import.meta.env.VITE_DELIVERY_ID,
+        type: cep ? "entrega" : "retirada",
+        date: new Date(),
+        notes: data.notes,
+        money: {
+          type: "dinheiro",
+          change: data?.money?.change | 0
+        },
+        client: {
+          name: data.name,
+          phone: data.phone,
+          address: {
+            street: address?.street,
+            number: data?.address?.number,
+            complement: data?.address?.complement,
+            cep: cep,
+            neighborhood: address?.neighborhood
+          }
+        },
+        products: productsAux
+      }, socket.id)
+    }
+  })
 
   return (
     <Container>
@@ -87,7 +92,7 @@ function NewOrder() {
         </button>
         <span>voltar</span>
       </header>
-      <Form ref={formRef} onSubmit={(data) => handlerSubmit(data)} >
+      <Form ref={formRef} onSubmit={(data) => handleSubmit(data)} >
         {
           cep ? (
             <h1>Informações de entrega</h1>
