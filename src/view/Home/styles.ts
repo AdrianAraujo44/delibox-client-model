@@ -6,6 +6,16 @@ export const Container = styled.div`
   align-items: center;
   flex-direction: column;
   padding-bottom: 100px;
+
+  .info {
+    margin-top: 5px;
+    color: ${props => props.theme.colors.palette.zinc[600]};
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    background-color: transparent;
+
+  }
 `
 export const Wrapper = styled.img`
   width: 100%;
@@ -24,16 +34,4 @@ export const Logo = styled.img`
 export const Title = styled.h1`
   font-size: 20px;
   font-weight: 600;
-`
-
-export const SocialContainer = styled.div`
-  display: flex;
-  gap: 5px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-`
-
-export const Address = styled.h2`
-  font-size: 14px;
-  font-weight: 400;
 `

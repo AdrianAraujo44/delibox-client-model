@@ -1,4 +1,5 @@
 import Cart from "../view/Cart";
+import DeliveryDetail from "../view/DeliveryDetail";
 import Home from "../view/Home";
 import NewOrder from "../view/NewOrder";
 import Order from "../view/Order";
@@ -28,6 +29,10 @@ const routes = [
   {
     path: '/pedido/:code',
     element: <Order /> 
+  },
+  {
+    path: '/detalhes',
+    element: <DeliveryDetail /> 
   }
 ]
 

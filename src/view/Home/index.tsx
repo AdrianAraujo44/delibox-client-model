@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import CategorySection from '../../components/CategorySection'
 import FloatButton from '../../components/FloatButton'
 import Loading from '../../components/Loading'
-import SocialIcon from '../../components/SocialIcon'
 import { useDeliveryInfo } from '../../hooks/useDeliveryInfo'
 import useRequestGet from '../../hooks/useRequestGet'
 
@@ -11,8 +11,6 @@ import {
   Wrapper,
   Logo,
   Title,
-  SocialContainer,
-  Address
 } from './styles'
 
 function Home() {
@@ -20,6 +18,7 @@ function Home() {
   const [menu, setMenu] = useState<any>([])
   const deliveryGet = useRequestGet()
   const menuGet = useRequestGet()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if(deliveryInfo.name == null) {
@@ -57,15 +56,9 @@ function Home() {
             src={deliveryInfo != null ? deliveryInfo.logo : ""}
           />
           <Title>{deliveryInfo.name}</Title>
-          <SocialContainer>
-            <SocialIcon social={"whatsapp"} />
-            <SocialIcon social={"youtube"} />
-            <SocialIcon social={"instagram"} />
-            <SocialIcon social={"twitter"} />
-            <SocialIcon social={"facebook"} />
-          </SocialContainer>
-          <Address>{`${deliveryInfo?.address?.street}, ${deliveryInfo?.address?.number}`}</Address>
-          <Address>{`${deliveryInfo?.address?.neighborhood} - ${deliveryInfo?.address?.city?.name}`}</Address>
+          <button className='info' onClick={() => navigate('/detalhes')}>
+            <span>ver mais informações</span>
+          </button>
 
           {
             menu.map((item: any, index: number) => (
