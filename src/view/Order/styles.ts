@@ -32,8 +32,8 @@ export const Container = styled.div`
 export const Progress = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
-  height: 180px;
+  margin-bottom: 30px;
+  height: auto;
 `
 
 export const ProgressItem = styled.div<{passed: boolean}>`

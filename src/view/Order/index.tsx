@@ -88,35 +88,34 @@ function Order() {
             }
           </h3>
         </ProgressItem>
-        {
-          order?.type == "entrega" ? (
-            <ProgressItem
-              passed={getOrderStatus(orderStatus, 'OUT_FOR_DELIVERY')}>
-              <div className="box">
-                <div className="ball"></div>
-                <span>saiu para a entrega</span>
-              </div>
-              <h3>
-                {orderStatus[2] != undefined &&
-                  format(new Date(orderStatus[0] != undefined && orderStatus[2]?.date), "d MMM, 'às' H:m", { locale: ptBR })
-                }
-              </h3>
-            </ProgressItem>
-          ) : (
-            <ProgressItem
-              passed={getOrderStatus(orderStatus, 'READY')}>
-              <div className="box">
-                <div className="ball"></div>
-                <span>seu pedido esta pronto</span>
-              </div>
-              <h3>
-                {orderStatus[2] != undefined &&
-                  format(new Date(orderStatus[0] != undefined && orderStatus[2]?.date), "d MMM, 'às' H:m", { locale: ptBR })
-                }
-              </h3>
-            </ProgressItem>
-          )
-        }
+
+        <ProgressItem
+          passed={getOrderStatus(orderStatus, 'READY')}>
+          <div className="box">
+            <div className="ball"></div>
+            <span>pronto</span>
+          </div>
+          <h3>
+            {orderStatus[2] != undefined &&
+              format(new Date(orderStatus[0] != undefined && orderStatus[2]?.date), "d MMM, 'às' H:m", { locale: ptBR })
+            }
+          </h3>
+        </ProgressItem>
+
+        {order?.type == 'entrega' && (
+          <ProgressItem
+            passed={getOrderStatus(orderStatus, 'OUT_FOR_DELIVERY')}>
+            <div className="box">
+              <div className="ball"></div>
+              <span>saiu para a entrega</span>
+            </div>
+            <h3>
+              {orderStatus[3] != undefined &&
+                format(new Date(orderStatus[0] != undefined && orderStatus[3]?.date), "d MMM, 'às' H:m", { locale: ptBR })
+              }
+            </h3>
+          </ProgressItem>
+        )}
 
         <ProgressItem
           passed={getOrderStatus(orderStatus, 'FINISHED')}>
@@ -125,8 +124,8 @@ function Order() {
             <span>finalizado</span>
           </div>
           <h3>
-            {orderStatus[3] != undefined &&
-              format(new Date(orderStatus[0] != undefined && orderStatus[3]?.date), "d MMM, 'às' H:m", { locale: ptBR })
+            {orderStatus[4] != undefined &&
+              format(new Date(orderStatus[0] != undefined && orderStatus[4]?.date), "d MMM, 'às' H:m", { locale: ptBR })
             }
           </h3>
         </ProgressItem>
