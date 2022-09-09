@@ -17,7 +17,6 @@ function Counter ({ amount = 1, setAmount, id }:any) {
       auxCart.forEach((element) => {
         if(element._id == id) {
           element.amount = number + 1
-          console.log('atualizou')
         }
       })
       setCart(auxCart)
@@ -33,7 +32,6 @@ function Counter ({ amount = 1, setAmount, id }:any) {
       auxCart.forEach((element) => {
         if(element._id == id) {
           element.amount = number - 1
-          console.log('atualizou')
         }
       })
       setCart(auxCart)
