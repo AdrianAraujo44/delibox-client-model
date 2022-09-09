@@ -43,7 +43,7 @@ function CartItem({ _id, imageUrl, name, amount, price }: ICartItem) {
             <span>R$ {price}</span>
           </div>
         </Content>
-        <Counter amount={amountState} setAmount={setAmountState} />
+        <Counter amount={amountState} setAmount={setAmountState} id={_id}/>
       </Box>
       <span className="remove" onClick={() => removeItem(_id)}>excluir</span>
     </Item>
