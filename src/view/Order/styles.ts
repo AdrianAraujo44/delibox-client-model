@@ -34,6 +34,10 @@ export const Progress = styled.div`
   flex-direction: column;
   margin-bottom: 30px;
   height: auto;
+
+  .orderCanceledText {
+    text-align: center;
+  }
 `
 
 export const ProgressItem = styled.div<{passed: boolean}>`
