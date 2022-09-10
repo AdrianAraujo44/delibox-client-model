@@ -59,28 +59,42 @@ function NewOrder() {
         productsAux.push({ amount: item.amount, item: item._id })
       })
 
-      if(data?.money?.change != "" && data?.money?.change < location.total) {
-        toast.error("valor a ser pago é insuficiente")
+      if(location?.cep != undefined) {
+        if(data?.money?.change != "" && data?.money?.change < location.total) {
+          toast.error("valor a ser pago é insuficiente")
+        }else {
+          socket.emit("new_orders", {
+            deliveryId: import.meta.env.VITE_DELIVERY_ID,
+            type: "entrega",
+            date: new Date(),
+            notes: data.notes,
+            money: {
+              type: "dinheiro",
+              change: (data?.money?.change - location.total) > 0 ? data?.money?.change - location.total : 0
+            },
+            client: {
+              name: data.name,
+              phone: data.phone,
+              address: {
+                street: address?.street,
+                number: data?.address?.number,
+                complement: data?.address?.complement,
+                cep: location?.cep,
+                neighborhood: address?.neighborhood
+              }
+            },
+            products: productsAux
+          }, socket.id)
+        }
       }else {
         socket.emit("new_orders", {
           deliveryId: import.meta.env.VITE_DELIVERY_ID,
-          type: location?.cep ? "entrega" : "retirada",
+          type: "retirada",
           date: new Date(),
           notes: data.notes,
-          money: {
-            type: "dinheiro",
-            change: (data?.money?.change - location.total) > 0 ? data?.money?.change - location.total : 0
-          },
           client: {
             name: data.name,
             phone: data.phone,
-            address: {
-              street: address?.street,
-              number: data?.address?.number,
-              complement: data?.address?.complement,
-              cep: location?.cep,
-              neighborhood: address?.neighborhood
-            }
           },
           products: productsAux
         }, socket.id)

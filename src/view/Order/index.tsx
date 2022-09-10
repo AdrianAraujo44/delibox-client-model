@@ -158,15 +158,21 @@ function Order() {
       <h2>Observações do pedido <IoAlertCircleSharp size={25} color={colors.palette.rose[500]} /></h2>
       <p>{order?.notes == "" ? "nenhuma observação" : order?.notes}</p>
 
-      <h2>Método de pagamento</h2>
-      <Row>
-        <span>Tipo: </span>
-        <span>{order?.money.type}</span>
-      </Row>
-      <Row>
-        <span>Troco</span>
-        <span>R$ {order?.money?.change?.toFixed(2)}</span>
-      </Row>
+      {
+        order?.type == "entrega" && (
+          <>
+            <h2>Método de pagamento</h2>
+            <Row>
+              <span>Tipo: </span>
+              <span>{order?.money.type}</span>
+            </Row>
+            <Row>
+              <span>Troco</span>
+              <span>R$ {order?.money?.change?.toFixed(2)}</span>
+            </Row>
+          </>
+        )
+      }
 
       <h2>Informações sobre o cliente</h2>
       <Row>
