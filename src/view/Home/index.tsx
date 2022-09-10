@@ -6,6 +6,7 @@ import Loading from '../../components/Loading'
 import { useCart } from '../../hooks/useCart'
 import { useDeliveryInfo } from '../../hooks/useDeliveryInfo'
 import useRequestGet from '../../hooks/useRequestGet'
+import { getStatusDelivery } from './utils/functions'
 
 import {
   Container,
@@ -23,7 +24,7 @@ function Home() {
   const { cart } = useCart()
 
   useEffect(() => {
-    if(deliveryInfo.name == null) {
+    if (deliveryInfo.name == null) {
       deliveryGet.requestGet(`/delivery/${import.meta.env.VITE_DELIVERY_ID}`)
     }
     menuGet.requestGet(`/delivery/${import.meta.env.VITE_DELIVERY_ID}/menu`)
@@ -58,6 +59,7 @@ function Home() {
             src={deliveryInfo != null ? deliveryInfo.logo : ""}
           />
           <Title>{deliveryInfo.name}</Title>
+          <span>{getStatusDelivery(deliveryInfo.status)}</span>
           <button className='info' onClick={() => navigate('/detalhes')}>
             <span>ver mais informações</span>
           </button>

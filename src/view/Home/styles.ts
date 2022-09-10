@@ -35,3 +35,11 @@ export const Title = styled.h1`
   font-size: 20px;
   font-weight: 600;
 `
+
+export const Status = styled.span<{color:string}>`
+  font-size: 18px;
+  color: ${props => props.color};
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`

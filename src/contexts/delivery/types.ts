@@ -3,6 +3,7 @@ export interface IdeliveryInfo {
     name: string,
     logo: string,
     background: string,
+    status: string,
     address: {
       cep: string,
       number: string,

@@ -74,16 +74,18 @@ function Cart() {
   }
 
   const handlerSubmit = () => {
-    if(cart.length > 0) {
-      if(searchCep == false) {
+    if (cart.length > 0) {
+      if (searchCep == false) {
         navigate('/novo-pedido')
-      }else if(taxDelivery == '-') {
+      } else if (taxDelivery == '-') {
         toast.error('você precisa pesquisar o cep')
-      }else {
-        navigate(`/novo-pedido`, {state: {
-          total: (subTotal() + (Number(taxDelivery) | 0)),
-          cep: cep
-        }})
+      } else {
+        navigate(`/novo-pedido`, {
+          state: {
+            total: (subTotal() + (Number(taxDelivery) | 0)),
+            cep: cep
+          }
+        })
       }
     }
   }

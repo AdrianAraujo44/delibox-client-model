@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useEffect } from 'react'
 import { useRef, useState } from 'react'
 import { IoArrowBack } from 'react-icons/io5'
-import { useLocation, useNavigate} from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import InputForm from '../../components/Forms/InputForm'
 import SelectForm from '../../components/Forms/SelectForm'
@@ -12,6 +12,7 @@ import { useSocket } from '../../contexts/socket/useSocket'
 import { useCart } from '../../hooks/useCart'
 import { useValidateForm } from '../../hooks/useValidadeForm'
 import { schemaNewOrder } from '../../constant/schemasForm'
+import { useDeliveryInfo } from '../../hooks/useDeliveryInfo'
 
 import {
   Container,
@@ -28,7 +29,8 @@ function NewOrder() {
   const { cart } = useCart()
   const [address, setAddress] = useState<any>()
   const [paymentMethod, setPaymentMethod] = useState("")
-  const location = useLocation().state as {total: number, cep:string}
+  const location = useLocation().state as { total: number, cep: string }
+  const { deliveryInfo } = useDeliveryInfo()
 
   useEffect(() => {
     socket.on('get_code_order', code => {
@@ -40,7 +42,7 @@ function NewOrder() {
     if (location?.cep) {
       getAddress(location?.cep)
     }
-  },[])
+  }, [])
 
   const getAddress = async (cep: string) => {
     try {
@@ -50,54 +52,60 @@ function NewOrder() {
       toast.error('cep não encontrado!')
     }
   }
-  const {handleSubmit} = useValidateForm({
+  const { handleSubmit } = useValidateForm({
     formRef, schema: schemaNewOrder,
-    onSuccess: (data:any) => {
-      let productsAux: { amount: number, item: string }[] = []
+    onSuccess: (data: any) => {
+      if (deliveryInfo.status == "ABERTO") {
+        let productsAux: { amount: number, item: string }[] = []
 
-      cart.forEach((item) => {
-        productsAux.push({ amount: item.amount, item: item._id })
-      })
+        cart.forEach((item) => {
+          productsAux.push({ amount: item.amount, item: item._id })
+        })
 
-      if(location?.cep != undefined) {
-        if(data?.money?.change != "" && data?.money?.change < location.total) {
-          toast.error("valor a ser pago é insuficiente")
-        }else {
+        if (location?.cep != undefined) {
+          if (data?.money?.change != "" && data?.money?.change < location.total) {
+            toast.error("valor a ser pago é insuficiente")
+          } else {
+            socket.emit("new_orders", {
+              deliveryId: import.meta.env.VITE_DELIVERY_ID,
+              type: "entrega",
+              date: new Date(),
+              notes: data.notes,
+              money: {
+                type: "dinheiro",
+                change: (data?.money?.change - location.total) > 0 ? data?.money?.change - location.total : 0
+              },
+              client: {
+                name: data.name,
+                phone: data.phone,
+                address: {
+                  street: address?.street,
+                  number: data?.address?.number,
+                  complement: data?.address?.complement,
+                  cep: location?.cep,
+                  neighborhood: address?.neighborhood
+                }
+              },
+              products: productsAux
+            }, socket.id)
+          }
+        } else {
           socket.emit("new_orders", {
             deliveryId: import.meta.env.VITE_DELIVERY_ID,
-            type: "entrega",
+            type: "retirada",
             date: new Date(),
             notes: data.notes,
-            money: {
-              type: "dinheiro",
-              change: (data?.money?.change - location.total) > 0 ? data?.money?.change - location.total : 0
-            },
             client: {
               name: data.name,
               phone: data.phone,
-              address: {
-                street: address?.street,
-                number: data?.address?.number,
-                complement: data?.address?.complement,
-                cep: location?.cep,
-                neighborhood: address?.neighborhood
-              }
             },
             products: productsAux
           }, socket.id)
         }
-      }else {
-        socket.emit("new_orders", {
-          deliveryId: import.meta.env.VITE_DELIVERY_ID,
-          type: "retirada",
-          date: new Date(),
-          notes: data.notes,
-          client: {
-            name: data.name,
-            phone: data.phone,
-          },
-          products: productsAux
-        }, socket.id)
+      } else if (deliveryInfo.status == "FECHADO") {
+        toast.error("estabelecimento fechado!")
+      } else {
+        toast.error("não estamos recebendo pedidos no momento!")
       }
     }
   })
