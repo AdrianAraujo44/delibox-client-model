@@ -46,31 +46,49 @@ function DeliveryDetail() {
 
       <Info>
         <span>
-          <IoStorefrontSharp 
-            size={`${deliveryInfo.address?.street} - ${deliveryInfo.address?.number} - ${deliveryInfo.address?.neighborhood}`.length < 20 ? 25 : 30} 
+          <IoStorefrontSharp
+            size={`${deliveryInfo.address?.street} - ${deliveryInfo.address?.number} - ${deliveryInfo.address?.neighborhood}`.length < 20 ? 25 : 30}
             color={colors.palette.zinc[500]} />
           {deliveryInfo.address?.street} - {deliveryInfo.address?.number} - {deliveryInfo.address?.neighborhood}
         </span>
-        <span>
-          <RiWhatsappFill size={25} color={colors.palette.zinc[500]} />
-          {deliveryInfo.social?.whatsapp}
-        </span>
-        <span>
-          <IoLogoYoutube size={25} color={colors.palette.zinc[500]} />
-          {deliveryInfo.social?.youtube}
-        </span>
-        <span>
-          <RiInstagramFill size={25} color={colors.palette.zinc[500]} />
-          {deliveryInfo.social?.instagram}
-        </span>
-        <span>
-          <IoLogoTwitter size={25} color={colors.palette.zinc[500]} />
-          {deliveryInfo.social?.instagram}
-        </span>
-        <span>
-          <IoLogoFacebook size={25} color={colors.palette.zinc[500]} />
-          {deliveryInfo.social?.instagram}
-        </span>
+        {
+          deliveryInfo.social?.whatsapp != "" && (
+            <span>
+              <RiWhatsappFill size={25} color={colors.palette.zinc[500]} />
+              {deliveryInfo.social?.whatsapp}
+            </span>
+          )
+        }
+
+        {
+          deliveryInfo.social?.youtube != "" && (
+            <span>
+              <IoLogoYoutube size={25} color={colors.palette.zinc[500]} />
+              {deliveryInfo.social?.youtube}
+            </span>
+          )
+        }
+
+        {deliveryInfo.social?.instagram != "" && (
+          <span>
+            <RiInstagramFill size={25} color={colors.palette.zinc[500]} />
+            {deliveryInfo.social?.instagram}
+          </span>
+        )}
+
+        {deliveryInfo.social?.twitter != "" && (
+          <span>
+            <IoLogoTwitter size={25} color={colors.palette.zinc[500]} />
+            {deliveryInfo.social?.twitter}
+          </span>
+        )}
+
+        {deliveryInfo.social?.facebook != "" && (
+          <span>
+            <IoLogoFacebook size={25} color={colors.palette.zinc[500]} />
+            {deliveryInfo.social?.facebook}
+          </span>
+        )}
       </Info>
 
       <Hour>
