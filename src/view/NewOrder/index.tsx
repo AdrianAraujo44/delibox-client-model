@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useEffect } from 'react'
 import { useRef, useState } from 'react'
 import { IoArrowBack } from 'react-icons/io5'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate} from 'react-router-dom'
 import { toast } from 'react-toastify'
 import InputForm from '../../components/Forms/InputForm'
 import SelectForm from '../../components/Forms/SelectForm'
@@ -26,9 +26,9 @@ function NewOrder() {
   const navigate = useNavigate()
   const socket = useSocket()
   const { cart } = useCart()
-  const { cep } = useParams()
   const [address, setAddress] = useState<any>()
   const [paymentMethod, setPaymentMethod] = useState("")
+  const location = useLocation().state as {total: number, cep:string}
 
   useEffect(() => {
     socket.on('get_code_order', code => {
@@ -37,10 +37,10 @@ function NewOrder() {
   }, [socket])
 
   useEffect(() => {
-    if (cep) {
-      getAddress(cep)
+    if (location?.cep) {
+      getAddress(location?.cep)
     }
-  }, [cep])
+  },[])
 
   const getAddress = async (cep: string) => {
     try {
@@ -58,29 +58,33 @@ function NewOrder() {
       cart.forEach((item) => {
         productsAux.push({ amount: item.amount, item: item._id })
       })
-  
-      socket.emit("new_orders", {
-        deliveryId: import.meta.env.VITE_DELIVERY_ID,
-        type: cep ? "entrega" : "retirada",
-        date: new Date(),
-        notes: data.notes,
-        money: {
-          type: "dinheiro",
-          change: data?.money?.change | 0
-        },
-        client: {
-          name: data.name,
-          phone: data.phone,
-          address: {
-            street: address?.street,
-            number: data?.address?.number,
-            complement: data?.address?.complement,
-            cep: cep,
-            neighborhood: address?.neighborhood
-          }
-        },
-        products: productsAux
-      }, socket.id)
+
+      if(data?.money?.change < location.total) {
+        toast.error("valor a ser pago é insuficiente")
+      }else {
+        socket.emit("new_orders", {
+          deliveryId: import.meta.env.VITE_DELIVERY_ID,
+          type: location?.cep ? "entrega" : "retirada",
+          date: new Date(),
+          notes: data.notes,
+          money: {
+            type: "dinheiro",
+            change: data?.money?.change - location.total | 0
+          },
+          client: {
+            name: data.name,
+            phone: data.phone,
+            address: {
+              street: address?.street,
+              number: data?.address?.number,
+              complement: data?.address?.complement,
+              cep: location?.cep,
+              neighborhood: address?.neighborhood
+            }
+          },
+          products: productsAux
+        }, socket.id)
+      }
     }
   })
 
@@ -94,7 +98,7 @@ function NewOrder() {
       </header>
       <Form ref={formRef} onSubmit={(data) => handleSubmit(data)} >
         {
-          cep ? (
+          location?.cep ? (
             <h1>Informações de entrega</h1>
           ) : (
             <h1>Informações de retirada</h1>
@@ -103,7 +107,7 @@ function NewOrder() {
         <InputForm name="name" placeholder="nome do cliente" />
         <InputForm name="phone" placeholder="telefone" />
         {
-          cep && (
+          location?.cep && (
             <>
               <span>CEP: {address?.zipcode}</span>
               <span>Rua: {address?.street}</span>
@@ -116,7 +120,7 @@ function NewOrder() {
           )
         }
         {
-          cep && (
+          location?.cep && (
             <SelectForm
               name="money.type"
               label="forma de pagamento"
@@ -136,7 +140,7 @@ function NewOrder() {
             <Payment>
               <h3>Troco para quanto ?</h3>
               <p>
-                seu pedido deu R$ 20.00, caso precise de troco, digite quanto vai pagar em dinheiro para que o entregador leve-o para você
+                {`seu pedido deu R$ ${location.total.toFixed(2)}, caso precise de troco, digite quanto vai pagar em dinheiro para que o entregador leve-o para você`}
               </p>
               <div className='inputStyles'>
                 <InputForm name="money.change" label='valor em R$' />

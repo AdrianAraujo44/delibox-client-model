@@ -79,7 +79,10 @@ function Cart() {
     }else if(taxDelivery == '-') {
       toast.error('você precisa pesquisar o cep')
     }else {
-      navigate(`/novo-pedido/${cep}`)
+      navigate(`/novo-pedido`, {state: {
+        total: (subTotal() + (Number(taxDelivery) | 0)),
+        cep: cep
+      }})
     }
   }
 
