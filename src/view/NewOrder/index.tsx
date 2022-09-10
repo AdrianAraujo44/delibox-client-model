@@ -59,7 +59,7 @@ function NewOrder() {
         productsAux.push({ amount: item.amount, item: item._id })
       })
 
-      if(data?.money?.change < location.total) {
+      if(data?.money?.change != "" && data?.money?.change < location.total) {
         toast.error("valor a ser pago é insuficiente")
       }else {
         socket.emit("new_orders", {
@@ -69,7 +69,7 @@ function NewOrder() {
           notes: data.notes,
           money: {
             type: "dinheiro",
-            change: data?.money?.change - location.total | 0
+            change: (data?.money?.change - location.total) > 0 ? data?.money?.change - location.total : 0
           },
           client: {
             name: data.name,
