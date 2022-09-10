@@ -23,10 +23,6 @@ const routes = [
     element: <NewOrder />
   },
   {
-    path: '/novo-pedido/:cep',
-    element: <NewOrder />
-  },
-  {
     path: '/pedido/:code',
     element: <Order /> 
   },
