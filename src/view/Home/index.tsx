@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import CategorySection from '../../components/CategorySection'
 import FloatButton from '../../components/FloatButton'
 import Loading from '../../components/Loading'
+import { useCart } from '../../hooks/useCart'
 import { useDeliveryInfo } from '../../hooks/useDeliveryInfo'
 import useRequestGet from '../../hooks/useRequestGet'
 
@@ -19,6 +20,7 @@ function Home() {
   const deliveryGet = useRequestGet()
   const menuGet = useRequestGet()
   const navigate = useNavigate()
+  const { cart } = useCart()
 
   useEffect(() => {
     if(deliveryInfo.name == null) {
@@ -69,7 +71,11 @@ function Home() {
               />
             ))
           }
-          <FloatButton />
+          {
+            cart.length > 0 && (
+              <FloatButton />
+            )
+          }
         </Container>
       ) : (
         <Loading />
