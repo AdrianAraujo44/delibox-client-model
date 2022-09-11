@@ -95,35 +95,76 @@ function DeliveryDetail() {
         <h2>Horário de funcionamento</h2>
         <div className='item'>
           <span>Segunda-feira</span>
-          <span>{deliveryInfo.hourWork?.monday?.am?.start} - {deliveryInfo.hourWork?.monday.am?.end} </span>
+          <span>
+            {
+              deliveryInfo.hourWork?.monday?.start == "" || deliveryInfo.hourWork?.monday.end == "" ? "fechado" : (
+                `${deliveryInfo.hourWork?.monday?.start} até às ${deliveryInfo.hourWork?.monday.end}`
+              )
+            }
+          </span>
         </div>
         <div className='item'>
           <span>Terça-feira</span>
-          <span>{deliveryInfo.hourWork?.tuesday?.am?.start} - {deliveryInfo.hourWork?.tuesday.am?.end} </span>
+          <span>
+            {deliveryInfo.hourWork?.tuesday?.start == "" || deliveryInfo.hourWork?.tuesday.end == "" ? "fechado" : (
+              `${deliveryInfo.hourWork?.tuesday?.start} até às ${deliveryInfo.hourWork?.tuesday.end}`
+            )
+            }
+          </span>
         </div>
         <div className='item'>
           <span>Quarta-feira</span>
-          <span>{deliveryInfo.hourWork?.wednesday?.am?.start} - {deliveryInfo.hourWork?.wednesday.am?.end} </span>
+          <span>
+            {deliveryInfo.hourWork?.wednesday?.start == "" || deliveryInfo.hourWork?.wednesday.end == "" ? "fechado" : (
+              `${deliveryInfo.hourWork?.wednesday?.start} até às ${deliveryInfo.hourWork?.wednesday.end}`
+            )
+            }
+          </span>
         </div>
         <div className='item'>
           <span>Quinta-feira</span>
-          <span>{deliveryInfo.hourWork?.thursday?.am?.start} - {deliveryInfo.hourWork?.thursday.am?.end} </span>
+          <span>
+            {deliveryInfo.hourWork?.thursday?.start == "" || deliveryInfo.hourWork?.thursday.end == "" ? "fechado" : (
+              `${deliveryInfo.hourWork?.thursday?.start} até às ${deliveryInfo.hourWork?.thursday.end}`
+            )
+            }
+          </span>
         </div>
         <div className='item'>
           <span>Sexta-feira</span>
-          <span>{deliveryInfo.hourWork?.friday?.am?.start} - {deliveryInfo.hourWork?.friday.am?.end} </span>
+          <span>
+            {deliveryInfo.hourWork?.friday?.start == "" || deliveryInfo.hourWork?.friday.end == "" ? "fechado" : (
+              `${deliveryInfo.hourWork?.friday?.start} até às ${deliveryInfo.hourWork?.friday.end}`
+            )
+            }
+          </span>
         </div>
         <div className='item'>
           <span>Sábado</span>
-          <span>{deliveryInfo.hourWork?.saturday?.am?.start} - {deliveryInfo.hourWork?.saturday.am?.end} </span>
+          <span>
+            {deliveryInfo.hourWork?.saturday?.start == "" || deliveryInfo.hourWork?.saturday.end == "" ? "fechado" : (
+              `${deliveryInfo.hourWork?.saturday?.start} até às ${deliveryInfo.hourWork?.saturday.end}`
+            )
+            }
+          </span>
         </div>
         <div className='item'>
           <span>Domingo</span>
-          <span>{deliveryInfo.hourWork?.sunday?.am?.start} - {deliveryInfo.hourWork?.sunday.am?.end} </span>
+          <span>
+            {deliveryInfo.hourWork?.sunday?.start == "" || deliveryInfo.hourWork?.sunday.end == "" ? "fechado" : (
+              `${deliveryInfo.hourWork?.sunday?.start} até às ${deliveryInfo.hourWork?.sunday.end}`
+            )
+            }
+          </span>
         </div>
         <div className='item'>
           <span>Feriado</span>
-          <span>{deliveryInfo.hourWork?.holiday?.am?.start} - {deliveryInfo.hourWork?.holiday.am?.end} </span>
+          <span>
+            {deliveryInfo.hourWork?.holiday?.start == "" || deliveryInfo.hourWork?.holiday.end == "" ? "fechado" : (
+              `${deliveryInfo.hourWork?.holiday?.start} até às ${deliveryInfo.hourWork?.holiday.end}`
+            )
+            }
+          </span>
         </div>
       </Hour>
     </Container>

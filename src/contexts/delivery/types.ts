@@ -19,8 +19,8 @@ export interface IdeliveryInfo {
       instagram: string,
       facebook: string,
       whatsapp: string,
-      twitter: string 
-  },
+      twitter: string
+    },
     taxs: [
       {
         neighborhood: string,
@@ -30,84 +30,36 @@ export interface IdeliveryInfo {
     ],
     hourWork: {
       monday: {
-        am: {
-          start: string,
-          end: string
-        },
-        pm: {
-          start: string,
-          end: string
-        }
+        start: string,
+        end: string
       },
       tuesday: {
-        am: {
-          start: string,
-          end: string
-        },
-        pm: {
-          start: string,
-          end: string
-        }
+        start: string,
+        end: string
       },
       wednesday: {
-        am: {
-          start: string,
-          end: string
-        },
-        pm: {
-          start: string,
-          end: string
-        }
+        start: string,
+        end: string
       },
       thursday: {
-        am: {
-          start: string,
-          end: string
-        },
-        pm: {
-          start: string,
-          end: string
-        }
+        start: string,
+        end: string
       },
       friday: {
-        am: {
-          start: string,
-          end: string
-        },
-        pm: {
-          start: string,
-          end: string
-        }
+        start: string,
+        end: string
       },
       saturday: {
-        am: {
-          start: string,
-          end: string
-        },
-        pm: {
-          start: string,
-          end: string
-        }
+        start: string,
+        end: string
       },
       sunday: {
-        am: {
-          start: string,
-          end: string
-        },
-        pm: {
-          start: string,
-          end: string
-        }
+        start: string,
+        end: string
       },
       holiday: {
-        am: {
-          start: string,
-          end: string
-        },
-        pm: {
-          start: string,
-          end: string
-        }
+        start: string,
+        end: string
       }
     },
   },
