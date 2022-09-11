@@ -9,6 +9,10 @@ export const Container = styled.section`
   width: 100%;
   max-width: 1000px;
   gap: 10px;
+
+  h1 {
+    font-size: 18px;
+  }
 `
 
 export const Box = styled.div`

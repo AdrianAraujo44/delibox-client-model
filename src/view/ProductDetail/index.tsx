@@ -86,7 +86,7 @@ function ProductDetail() {
               ) : (
                 <span className='missing'>produto indisponivel</span>
               )}
-              <strong>R$ {data?.price}</strong>
+              <strong>R$ {data?.price?.toFixed(2)}</strong>
             </section>
             {
               data?.available == true && (

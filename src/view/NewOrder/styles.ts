@@ -5,7 +5,7 @@ export const Container = styled.div`
   padding: 20px;
 
   header{
-    padding: 30px 0px;
+    padding: 10px 0px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -18,7 +18,6 @@ export const Container = styled.div`
   }
 
   h1 {
-    /* text-align: center; */
     font-size: 18px;
     margin-top: 20px;
   }

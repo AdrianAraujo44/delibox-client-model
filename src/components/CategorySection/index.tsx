@@ -29,7 +29,7 @@ function CategorySection({ title, products }: ICategory) {
             <Item key={index} onClick={() => navigate(`product/${item._id}`)}>
               <img src={item.imageUrl != "" ? item.imageUrl : productDefault} />
               <strong>{item.name}</strong>
-              <span>R$ {item.price}</span>
+              <span>R$ {item.price.toFixed(2)}</span>
             </Item>
           ))
         }
