@@ -1,5 +1,6 @@
 import { createContext } from 'react'
 import { io } from 'socket.io-client'
+const apiURL = import.meta.env.VITE_API_URL
 
-export const socket = io("http://localhost:5000")
+export const socket = io(`${apiURL}`)
 export const SocketContext = createContext(socket)
