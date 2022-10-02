@@ -11,9 +11,11 @@ interface IComplements {
   item: any,
   setComplementsSelected: any,
   complementId: string
+  mandatoryComplements: string[] 
+  setMandatoryComplements: any
 }
 
-function ComplementItem({ complementsSelected, setComplementsSelected, item, complementId }: IComplements) {
+function ComplementItem({ complementsSelected, setComplementsSelected, item, complementId, mandatoryComplements, setMandatoryComplements }: IComplements) {
   const [showCounter, setShowCounter] = useState(false)
   const [amount, setAmount] = useState(1)
 
@@ -31,6 +33,11 @@ function ComplementItem({ complementsSelected, setComplementsSelected, item, com
       count = count + 1
     }
 
+    if (count >= item.rules.maxItens) {
+      let auxMandatory = [...mandatoryComplements]
+      auxMandatory.splice(mandatoryComplements.indexOf(complementId),1)
+      setMandatoryComplements(auxMandatory)
+    }
   }
 
   const increaseAmount = () => {
@@ -52,6 +59,11 @@ function ComplementItem({ complementsSelected, setComplementsSelected, item, com
             setAmount(amount + 1)
           }
 
+          if (count >= item.rules.maxItens) {
+            let auxMandatory = [...mandatoryComplements]
+            auxMandatory.splice(mandatoryComplements.indexOf(complementId),1)
+            setMandatoryComplements(auxMandatory)
+          }
         }
       }
     })
@@ -70,13 +82,17 @@ function ComplementItem({ complementsSelected, setComplementsSelected, item, com
           auxComplements.splice(indice, 1)
           setShowCounter(false)
         }
+
+        if(mandatoryComplements.indexOf(element.complementId) < 0) {
+          setMandatoryComplements([...mandatoryComplements, element.complementId])
+        }
       }
     })
     setComplementsSelected([...auxComplements])
   }
 
   return (
-    <Item key={item._id}>
+    <Item>
       <div className="box">
         <label>{item.name}</label>
         <span>+ R${item.price.toFixed(2)}</span>

@@ -83,6 +83,12 @@ export const Button = styled.button`
     background-color: ${props => props.theme.colors.palette.esmerald[600]};
   }
 
+  :disabled {
+    background-color: ${props => props.theme.colors.background};
+    color: ${props => props.theme.colors.main};
+    border: 1px solid ${props => props.theme.colors.main};
+  }
+
 `
 
 export const ComplementList = styled.div`

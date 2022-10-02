@@ -12,6 +12,7 @@ import productDefault from './../../assets/productDefault.png'
 import RadioForm from '../../components/Forms/RadioForm'
 import ComplementItem from '../../components/ComplementItem'
 import { formatFormComplements } from './utils/functions'
+import { toast } from 'react-toastify'
 
 import {
   Container,
@@ -20,6 +21,23 @@ import {
   ComplementList
 } from './styles'
 
+export interface IComplementItem {
+  _id: string
+  name: string
+  price: number
+  amount?: number
+}
+
+export interface IComplement {
+  _id: string
+  title: string
+  rules: {
+    maxItens: number
+    maxChoiceItem: number
+    mandatory: boolean
+  }
+  itens: IComplementItem[]
+}
 
 function ProductDetail() {
   const { productId } = useParams()
@@ -29,7 +47,10 @@ function ProductDetail() {
   const [amount, setAmount] = useState(1)
   const { cart, setCart } = useCart()
   const formRef = useRef<FormHandles>(null)
-  const [complementsSelected, setComplementsSelected] = useState([])
+  const [complementsSelected, setComplementsSelected] = useState<any>([])
+  const [mandatoryComplements, setMandatoryComplements] = useState<string[]>([])
+  const [totalPrice, setTotalPrice] = useState(0)
+  const [priceComplements, setPriceComplements] = useState({unique:0, mult:0})
 
   useEffect(() => {
     productGet.requestGet(`product/${productId}`)
@@ -38,14 +59,20 @@ function ProductDetail() {
   useEffect(() => {
     if (productGet.loaded && !productGet.error) {
       let auxData = { ...productGet.data.product }
+      setTotalPrice(productGet.data.product.price)
+      let auxMandatory: string[] = []
       let itens: { id: string; value: string; label: string; text: string; }[] = []
 
-      auxData.complementId.forEach((element: any, index: number) => {
+      auxData.complementId.forEach((element: IComplement, index: number) => {
+        if (element.rules.mandatory) {
+          auxMandatory.push(element._id)
+        }
+
         if (element.rules.maxItens == 1) {
           element.itens.forEach((item: any) => {
             itens.push({
               label: item.name,
-              value: JSON.stringify({ ...item, amount: 1 }),
+              value: JSON.stringify({ ...item, amount: 1, complementId: element._id }),
               id: item._id,
               text: `+ R$${item.price?.toFixed(2)}`
             })
@@ -55,13 +82,58 @@ function ProductDetail() {
         }
       })
 
-
       setData(auxData)
-      console.log(auxData)
+      setMandatoryComplements(auxMandatory)
     } else if (productGet.loaded && productGet.error) {
-      console.log(productGet.error)
+      toast.error(productGet.error)
     }
   }, [productGet.data, productGet.loaded, productGet.error])
+
+  useEffect(() => {
+    let total = 0
+    let auxPrices = {...priceComplements}
+    complementsSelected.forEach((element:any) => {
+      total += element.price * element.amount
+    })
+    auxPrices.mult = total
+    setPriceComplements({...auxPrices})
+
+   /*  calculateTotalPrice() */
+  }, [complementsSelected])
+
+  const calculateTotalPrice = () => {
+    let total = 0
+    let auxPrices = {...priceComplements}
+    formatFormComplements(formRef.current?.getData().complements).forEach((element:any) => {
+      total += element.price * element.amount
+    })
+    console.log('total mult '+ total)
+    auxPrices.unique = total
+    setPriceComplements({...auxPrices})
+    console.log(auxPrices)
+  }
+
+  useEffect(() => {
+    setTotalPrice(data?.price + priceComplements?.mult + priceComplements?.unique)
+    console.log(data?.price)
+    console.log(priceComplements.mult)
+    console.log(priceComplements.unique)
+    console.log(priceComplements)
+  }, [priceComplements])
+
+  const verifyMandatoryItens = () => {
+    let auxComplements = [...formatFormComplements(formRef.current?.getData().complements)]
+    let auxMandatory = [...mandatoryComplements]
+    mandatoryComplements.forEach((element, index) => {
+      auxComplements.forEach((complement) => {
+        if(element == complement.complementId) {
+          auxMandatory.splice(index,1)
+        }
+      })
+    })
+
+    setMandatoryComplements(auxMandatory)
+  }
 
   const addCart = () => {
     let exits = false
@@ -112,13 +184,12 @@ function ProductDetail() {
               alt="image do produto" />
             <strong>{data?.name}</strong>
             <p>{data?.description}</p>
-
           </Content>
-          <Form ref={formRef} onSubmit={(data) => console.log(data.complements)}>
+          <Form ref={formRef} onSubmit={(data) => console.log(data.complements)} onChange={(e) => { verifyMandatoryItens(); calculateTotalPrice() }}>
             <ComplementList>
               {
                 data?.complementId?.map((element: any, index: number) => (
-                  <>
+                  <div key={index}>
                     {
                       element.rules.maxItens == 1 ? (
                         <div>
@@ -138,16 +209,20 @@ function ProductDetail() {
                             <h2>{element.title}</h2>
                             {element.rules.mandatory && <div className='badge'>Obrigatório</div>}
                           </div>
+                          
                           <span>
                             {element.rules.mandatory ? `escolha de 1 até ${element.rules.maxItens}` : `escolha até ${element.rules.maxItens}`}
                           </span>
                           {
-                            element.itens.map((complement: any, index: number) => (
+                            element.itens.map((complement: any, index:number) => (
                               <ComplementItem
-                                item={{...complement, rules: element.rules}}
+                                key={index}
+                                item={{ ...complement, rules: element.rules }}
                                 complementsSelected={complementsSelected}
                                 setComplementsSelected={setComplementsSelected}
                                 complementId={element._id}
+                                mandatoryComplements={mandatoryComplements}
+                                setMandatoryComplements={setMandatoryComplements}
                               />
                             ))
                           }
@@ -155,25 +230,23 @@ function ProductDetail() {
                         </div>
                       )
                     }
-                  </>
+                  </div>
                 ))
               }
             </ComplementList>
 
           </Form>
-
-
           <footer>
-              {data?.available == true ? (
-                <Counter setAmount={setAmount} />
-              ) : (
-                <span className='missing'>produto indisponível</span>
-              )}
+            {data?.available == true ? (
+              <Counter setAmount={setAmount} />
+            ) : (
+              <span className='missing'>produto indisponível</span>
+            )}
             {
               data?.available == true && (
-                <Button onClick={() => addCart()}>
+                <Button onClick={() => addCart()} disabled={(mandatoryComplements.length == 0) ? false : true}>
                   adicionar
-                  <strong>R$ {data?.price?.toFixed(2)}</strong>
+                  <strong>R$ {totalPrice.toFixed(2)}</strong>
                 </Button>
               )
             }

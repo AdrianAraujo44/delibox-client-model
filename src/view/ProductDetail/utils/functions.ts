@@ -1,22 +1,24 @@
-export function formatFormComplements (complements: []) {
-  let formated:any = []
+export function formatFormComplements(complements: []) {
+  let formated: any = []
   let auxComplement: any = []
 
-  if(complements?.length > 0) {
-    auxComplement= [...complements]
+  if (complements?.length > 0) {
+    auxComplement = [...complements]
   }
 
-  complements?.forEach((element,index) => {
-    if(element == null) {
-      auxComplement.splice(index,1)
+  complements?.forEach((element, index) => {
+    if (element == null) {
+      auxComplement.splice(index, 1)
     }
   })
 
-  if(auxComplement?.length > 0) {
+  if (auxComplement?.length > 0) {
     auxComplement.forEach((element: any) => {
-      formated.push(JSON.parse(element))
+      if (element != undefined) {
+        formated.push(JSON.parse(element))
+      }
     })
   }
-  
+
   return formated
 }
