@@ -31,31 +31,32 @@ function ComplementItem({ complementsSelected, setComplementsSelected, item, com
       count = count + 1
     }
 
-    return count
   }
 
   const increaseAmount = () => {
+    let auxComplements = [...complementsSelected]
     complementsSelected.forEach((element: any, indice: number) => {
+
       if (element._id == item._id) {
         if ((item.rules.maxChoiceItem >= amount + 1)) {
-          addComplement(amount + 1)
-          setAmount(amount + 1)
-        }
-      }
-    })
-    
-    /* let auxComplements = [...complementsSelected]
-    complementsSelected.forEach((element: any, indice: number) => {
-      if (element._id == item._id) {
-        if ((item.rules.maxChoiceItem >= amount + 1)) {
-          auxComplements[indice].amount = amount + 1
-          setAmount(amount + 1)
+          let count = 0
+          complementsSelected.forEach((element: any) => {
+            if (complementId == element.complementId) {
+              count = count + element.amount
+            }
+          })
+
+          if (count + 1 <= item.rules.maxItens) {
+            auxComplements[indice].amount = amount + 1
+            count = count + 1
+            setAmount(amount + 1)
+          }
+
         }
       }
     })
 
-    setComplementsSelected([...auxComplements]) */
-
+    setComplementsSelected([...auxComplements])
   }
 
   const decreaseAmount = () => {
