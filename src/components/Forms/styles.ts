@@ -32,3 +32,24 @@ export const ErrorMessage = styled.span`
 	font-size: 0.8rem;
 	color: red;
 `
+
+export const RadioButton = styled.div`
+  input {
+    width: 20px;
+    height: 20px;
+    margin-top: 20px;
+  }
+  .box {
+    display: flex;
+    gap: 5px;
+
+    .option {
+      margin: 20px 0px 10px 0px;
+      display: flex;
+      flex-direction: column;
+      span {
+        color: ${props => props.theme.colors.palette.zinc[400]};
+      }
+    }
+  }
+`

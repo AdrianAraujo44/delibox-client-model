@@ -34,6 +34,10 @@ function Cart() {
     }
   }, [searchCep])
 
+  useEffect(() => {
+    console.log(cart)
+  },[])
+
   const getZipcode = async () => {
     try {
       const cep = formRef.current?.getFieldValue("cep")
@@ -109,6 +113,7 @@ function Cart() {
             name={element.name}
             amount={element.amount}
             price={element.price}
+            complements={element.complements}
           />
         ))
       }
