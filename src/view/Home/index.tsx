@@ -7,6 +7,7 @@ import { useCart } from '../../hooks/useCart'
 import { useDeliveryInfo } from '../../hooks/useDeliveryInfo'
 import useRequestGet from '../../hooks/useRequestGet'
 import { getStatusDelivery } from './utils/functions'
+import { toast } from 'react-toastify'
 
 import {
   Container,
@@ -34,7 +35,7 @@ function Home() {
     if (deliveryGet.loaded && !deliveryGet.error) {
       setDeliveryInfo(deliveryGet.data)
     } else if (deliveryGet.loaded && deliveryGet.error) {
-      console.log(deliveryGet.error)
+      toast.error(deliveryGet.error)
     }
   }, [deliveryGet.data, deliveryGet.loaded, deliveryGet.error])
 
@@ -42,7 +43,7 @@ function Home() {
     if (menuGet.loaded && !menuGet.error) {
       setMenu(menuGet.data?.menu)
     } else if (menuGet.loaded && menuGet.error) {
-      console.log(menuGet.error)
+      toast.error(menuGet.error)
     }
   }, [menuGet.data, menuGet.loaded, menuGet.error])
 

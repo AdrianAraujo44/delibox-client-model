@@ -98,7 +98,6 @@ function ProductDetail() {
     auxPrices.mult = total
     setPriceComplements({...auxPrices})
 
-   /*  calculateTotalPrice() */
   }, [complementsSelected])
 
   const calculateTotalPrice = () => {
@@ -107,10 +106,8 @@ function ProductDetail() {
     formatFormComplements(formRef.current?.getData().complements).forEach((element:any) => {
       total += element.price * element.amount
     })
-    console.log('total mult '+ total)
     auxPrices.unique = total
     setPriceComplements({...auxPrices})
-    console.log(auxPrices)
   }
 
   useEffect(() => {
@@ -136,8 +133,7 @@ function ProductDetail() {
     let position = 0
 
     for (let i = 0; i < cart.length; i++) {
-      /* if (JSON.stringify(cart[i]) == JSON.stringify(data)) { */
-      if (cart[i]._id == data?._id) {
+      if (cart[i]._id == data?._id && JSON.stringify(cart[i].complements) == JSON.stringify([...complementsSelected, ...formatFormComplements(formRef.current?.getData().complements)])) {
         exits = true
         position = i
         break
@@ -181,7 +177,7 @@ function ProductDetail() {
             <strong>{data?.name}</strong>
             <p>{data?.description}</p>
           </Content>
-          <Form ref={formRef} onSubmit={(data) => console.log(data.complements)} onChange={(e) => { verifyMandatoryItens(); calculateTotalPrice() }}>
+          <Form ref={formRef} onSubmit={() =>{}} onChange={(e) => { verifyMandatoryItens(); calculateTotalPrice() }}>
             <ComplementList>
               {
                 data?.complementId?.map((element: any, index: number) => (

@@ -34,10 +34,6 @@ function Cart() {
     }
   }, [searchCep])
 
-  useEffect(() => {
-    console.log(cart)
-  },[])
-
   const getZipcode = async () => {
     try {
       const cep = formRef.current?.getFieldValue("cep")
@@ -69,17 +65,6 @@ function Cart() {
     }
   }
 
-  /* const subTotal = () => {
-    let total = 0
-    cart.forEach((item) => {
-      item.complements.forEach((complement) => {
-        total += complement.price * complement.amount
-      })
-      total += item.amount * item.price
-    })
-    return total
-  } */
-
   const subTotal = () => {
     let total = 0
     cart.forEach((item) => {
@@ -87,7 +72,6 @@ function Cart() {
         total += complement.price * complement.amount
       })
       total = (total + item.price) * item.amount
-      /* total += item.amount * total */
     })
     return total
   }

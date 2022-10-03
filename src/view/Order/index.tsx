@@ -58,7 +58,7 @@ function Order() {
     if (deliveryGet.loaded && !deliveryGet.error) {
       setDeliveryInfo(deliveryGet.data)
     } else if (deliveryGet.loaded && deliveryGet.error) {
-      console.log(deliveryGet.error)
+      toast.error(deliveryGet.error)
     }
   }, [deliveryGet.data, deliveryGet.loaded, deliveryGet.error])
 
