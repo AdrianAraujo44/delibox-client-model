@@ -13,10 +13,25 @@ function FloatButton () {
   const subTotal = () => {
     let total = 0
     cart.forEach((item) => {
-      total += item.amount * item.price
+      item.complements.forEach((complement) => {
+        total += complement.price * complement.amount
+      })
+      total = (total + item.price) * item.amount
+      /* total += item.amount * total */
     })
     return total
   }
+
+  /* const subTotal = () => {
+    let total = 0
+    cart.forEach((item) => {
+      item.complements.forEach((complement) => {
+        total += complement.price * complement.amount
+      })
+      total += item.amount * item.price
+    })
+    return total
+  } */
 
   return (
     <Button onClick={() => navigate('/carrinho')}>

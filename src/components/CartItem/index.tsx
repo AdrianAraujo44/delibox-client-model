@@ -13,7 +13,7 @@ interface ICartItem {
   _id: string,
   imageUrl: string,
   name: string,
-  amount: string,
+  amount: number,
   price: number,
   complements: any
 }
@@ -34,6 +34,15 @@ function CartItem({ _id, imageUrl, name, amount, price, complements }: ICartItem
     setCart(auxCart)
   }
 
+  const priceItem = () => {
+    let total = 0
+    complements.forEach((complement:any) => {
+      total += complement.price * complement.amount
+    })
+    total = (total + price) * amount
+    return total
+  }
+
   return (
     <Item>
       <Box>
@@ -41,7 +50,7 @@ function CartItem({ _id, imageUrl, name, amount, price, complements }: ICartItem
           <img src={imageUrl != "" ? imageUrl : productDefault} />
           <div className="box">
             <span>{name}</span>
-            <span>R$ {price.toFixed(2)}</span>
+            <span>R$ {priceItem().toFixed(2)}</span>
           </div>
         </Content>
         <Counter amount={amountState} setAmount={setAmountState} id={_id} />

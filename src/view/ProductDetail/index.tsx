@@ -114,12 +114,8 @@ function ProductDetail() {
   }
 
   useEffect(() => {
-    setTotalPrice(data?.price + priceComplements?.mult + priceComplements?.unique)
-    console.log(data?.price)
-    console.log(priceComplements.mult)
-    console.log(priceComplements.unique)
-    console.log(priceComplements)
-  }, [priceComplements])
+    setTotalPrice((data?.price + priceComplements?.mult + priceComplements?.unique) * amount)
+  }, [priceComplements, amount])
 
   const verifyMandatoryItens = () => {
     let auxComplements = [...formatFormComplements(formRef.current?.getData().complements)]
