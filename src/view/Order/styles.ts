@@ -27,6 +27,10 @@ export const Container = styled.div`
     margin-top: 5px;
     margin-bottom: 15px ;
   }
+
+  .info {
+    margin-top: 25px;
+  }
 `
 
 export const Progress = styled.div`
@@ -94,19 +98,22 @@ export const Item = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  
-  img {
-    width: 60px;
-    height: 60px;
-    border-radius: 10px;
-    margin-right: 10px;
-  }
-
 `
 
 export const Box = styled.div`
   display: flex;
-  align-items: center;
+  /* align-items: center; */
+  flex-direction: column;
+
+  h3 {
+    font-size: 18px;
+    color: ${props => props.theme.colors.palette.zinc[600]};
+  }
+
+  span {
+    color: ${props => props.theme.colors.palette.zinc[500]};
+  }
+
 
   .box {
     display: flex;
@@ -118,6 +125,7 @@ export const Box = styled.div`
         color: ${props => props.theme.colors.main};
         font-weight: 600;
         align-items: flex-end;
+        display: block;
       }
     }
   }

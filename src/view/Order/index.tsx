@@ -4,12 +4,12 @@ import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useTheme } from 'styled-components'
 import useRequestGet from '../../hooks/useRequestGet'
-import productDefault from './../../assets/productDefault.png'
 import { getOrderStatus } from './utils/functions'
 import { format } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 import { useSocket } from '../../contexts/socket/useSocket'
 import { useDeliveryInfo } from '../../hooks/useDeliveryInfo'
+import { getTotalPriceOrder, getTotalPriceProduct } from '../../utils/functions'
 
 import {
   Container,
@@ -143,96 +143,121 @@ function Order() {
       {order?.products.map((element: any, index: number) => (
         <Item key={index}>
           <Box>
-            <img src={element.item.imageUrl != "" ? element.item.imageUrl : productDefault} />
-            <span>{element.item.name}</span>
+            <h3>{element.name}</h3>
+            {
+              element.complements.map((complement: any, index: number) => (
+                <span key={index}>{`${complement.amount}x ${complement.name}`}</span>
+              ))
+            }
           </Box>
           <Box>
             <div className="box">
               <span>{element.amount}x</span>
-              <span>R$ {element.item.price}</span>
+              <span>R$ {getTotalPriceProduct(element.complements, element.price, 1).toFixed(2)}</span>
             </div>
           </Box>
         </Item>
       ))}
 
-      <h2>Observações do pedido <IoAlertCircleSharp size={25} color={colors.palette.rose[500]} /></h2>
-      <p>{order?.notes == "" ? "nenhuma observação" : order?.notes}</p>
+      <div className="info">
+        <Row>
+          <span>Subtotal: </span>
+          <span>{getTotalPriceOrder(order?.products).toFixed(2)}</span>
+        </Row>
+        <Row>
+          <span>Taxa de entrega: </span>
+          <span>R${order?.tax.toFixed(2)}</span>
+        </Row>
+        <Row>
+          <strong>Total: </strong>
+          <strong>R$ {(getTotalPriceOrder(order?.products) + order?.tax).toFixed(2)}</strong>
+        </Row>
 
-      {
-        order?.type == "entrega" && (
-          <>
-            <h2>Método de pagamento</h2>
-            <Row>
-              <span>Tipo: </span>
-              <span>{order?.money.type}</span>
-            </Row>
-            <Row>
-              <span>Troco</span>
-              <span>R$ {order?.money?.change?.toFixed(2)}</span>
-            </Row>
-          </>
-        )
-      }
+        {
+          order?.notes != "" && (
+            <>
+              <h2>Observações do pedido <IoAlertCircleSharp size={25} color={colors.palette.rose[500]} /></h2>
+              <p>{order?.notes}</p>
+            </>
+          )
+        }
 
-      <h2>Informações sobre o cliente</h2>
-      <Row>
-        <span>Nome: </span>
-        <span>{order?.client?.name}</span>
-      </Row>
-      <Row>
-        <span>Telefone: </span>
-        <span>{order?.client?.phone}</span>
-      </Row>
-      {
-        order?.type == "entrega" ? (
-          <>
-            <Row>
-              <span>CEP: </span>
-              <span>{order?.client?.address?.cep}</span>
-            </Row>
-            <Row>
-              <span>Rua: </span>
-              <span>{order?.client?.address?.street}</span>
-            </Row>
-            <Row>
-              <span>Bairro: </span>
-              <span>{order?.client?.address?.neighborhood}</span>
-            </Row>
-            <Row>
-              <span>Número: </span>
-              <span>{order?.client?.address?.number}</span>
-            </Row>
-            <Row>
-              <span>Complemento: </span>
-              <span>{order?.client?.address?.complement}</span>
-            </Row>
-          </>
-        ) : (
-          <>
-            <h2>Local para retirar seu pedido</h2>
-            <Row>
-              <span>CEP: </span>
-              <span>{deliveryInfo?.address?.cep}</span>
-            </Row>
-            <Row>
-              <span>Rua: </span>
-              <span>{deliveryInfo.address?.street}</span>
-            </Row>
-            <Row>
-              <span>Bairro: </span>
-              <span>{deliveryInfo.address?.neighborhood}</span>
-            </Row>
-            <Row>
-              <span>Número: </span>
-              <span>{deliveryInfo.address?.number}</span>
-            </Row>
-            <Row>
-              <span>Complemento: </span>
-              <span>{deliveryInfo.address?.complement}</span>
-            </Row>
-          </>
-        )
-      }
+        {
+          order?.type == "entrega" && (
+            <>
+              <h2>Método de pagamento</h2>
+              <Row>
+                <span>Tipo: </span>
+                <span>{order?.money.type}</span>
+              </Row>
+              <Row>
+                <span>Troco</span>
+                <span>R$ {order?.money?.change?.toFixed(2)}</span>
+              </Row>
+            </>
+          )
+        }
+
+        <h2>Informações sobre o cliente</h2>
+        <Row>
+          <span>Nome: </span>
+          <span>{order?.client?.name}</span>
+        </Row>
+        <Row>
+          <span>Telefone: </span>
+          <span>{order?.client?.phone}</span>
+        </Row>
+        {
+          order?.type == "entrega" ? (
+            <>
+              <Row>
+                <span>CEP: </span>
+                <span>{order?.client?.address?.cep}</span>
+              </Row>
+              <Row>
+                <span>Rua: </span>
+                <span>{order?.client?.address?.street}</span>
+              </Row>
+              <Row>
+                <span>Bairro: </span>
+                <span>{order?.client?.address?.neighborhood}</span>
+              </Row>
+              <Row>
+                <span>Número: </span>
+                <span>{order?.client?.address?.number}</span>
+              </Row>
+              <Row>
+                <span>Complemento: </span>
+                <span>{order?.client?.address?.complement}</span>
+              </Row>
+            </>
+          ) : (
+            <>
+              <h2>Local para retirar seu pedido</h2>
+              <Row>
+                <span>CEP: </span>
+                <span>{deliveryInfo?.address?.cep}</span>
+              </Row>
+              <Row>
+                <span>Rua: </span>
+                <span>{deliveryInfo.address?.street}</span>
+              </Row>
+              <Row>
+                <span>Bairro: </span>
+                <span>{deliveryInfo.address?.neighborhood}</span>
+              </Row>
+              <Row>
+                <span>Número: </span>
+                <span>{deliveryInfo.address?.number}</span>
+              </Row>
+              <Row>
+                <span>Complemento: </span>
+                <span>{deliveryInfo.address?.complement}</span>
+              </Row>
+            </>
+          )
+        }
+      </div>
     </Container>
   )
 }
