@@ -17,6 +17,7 @@ import {
   Form,
   SearchCep,
 } from './styles'
+import { getTotalPriceOrder } from '../../utils/functions'
 
 function Cart() {
   const navigate = useNavigate()
@@ -52,25 +53,17 @@ function Cart() {
 
       if (haveNeighborhood) {
         setTaxDelivery(deliveryInfo.taxs[index].price.toFixed(2))
-        setTotal((subTotal() + deliveryInfo.taxs[index].price))
+        setTotal((getTotalPriceOrder(cart) + deliveryInfo.taxs[index].price))
         setCep(cep)
       } else {
         toast.error("delivery indisponivel para esse bairro")
-        setTotal(subTotal())
+        setTotal(getTotalPriceOrder(cart))
         setTaxDelivery('-')
       }
 
     } catch (err) {
       toast.error("cep não encontrado!")
     }
-  }
-
-  const subTotal = () => {
-    let total = 0
-    cart.forEach((item) => {
-      total += item.amount * item.price
-    })
-    return total
   }
 
   const handlerSubmit = () => {
@@ -82,7 +75,7 @@ function Cart() {
       } else {
         navigate(`/novo-pedido`, {
           state: {
-            total: (subTotal() + (Number(taxDelivery) | 0)),
+            total: (getTotalPriceOrder(cart) + (Number(taxDelivery) | 0)),
             cep: cep
           }
         })
@@ -109,6 +102,7 @@ function Cart() {
             name={element.name}
             amount={element.amount}
             price={element.price}
+            complements={element.complements}
           />
         ))
       }
@@ -132,7 +126,7 @@ function Cart() {
         <PriceBox>
           <div className="row">
             <span>Subtotal</span>
-            <span>R$ {subTotal().toFixed(2)}</span>
+            <span>R$ {getTotalPriceOrder(cart).toFixed(2)}</span>
           </div>
           <div className="row">
             <span>Taxa de entrega</span>
@@ -144,7 +138,7 @@ function Cart() {
               R$ {
                 cart.length > 0
                   ?
-                  (subTotal() + (Number(taxDelivery) | 0)).toFixed(2)
+                  (getTotalPriceOrder(cart) + (Number(taxDelivery) | 0)).toFixed(2)
                   :
                   total.toFixed(2)}
             </strong>

@@ -86,7 +86,7 @@ function NewOrder() {
                   neighborhood: address?.neighborhood
                 }
               },
-              products: productsAux
+              products: cart
             }, socket.id)
           }
         } else {
@@ -99,7 +99,7 @@ function NewOrder() {
               name: data.name,
               phone: data.phone,
             },
-            products: productsAux
+            products: cart
           }, socket.id)
         }
       } else if (deliveryInfo.status == "FECHADO") {

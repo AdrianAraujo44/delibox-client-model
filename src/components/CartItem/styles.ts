@@ -20,6 +20,14 @@ export const Item = styled.div`
     color: ${props => props.theme.colors.palette.rose[700]};
     font-size: 16px;
   }
+
+  .complements {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: ${props => props.theme.colors.palette.zinc[500]};
+    margin-top: 10px;
+  }
 `
 
 export const Box = styled.div`
